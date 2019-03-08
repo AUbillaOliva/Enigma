@@ -1,8 +1,11 @@
 # depslib dependency file v1.0
-1551841416 source:d:\users\terminus\desktop\programacion\enigma\enigma\main.c
+1552071678 source:d:\users\terminus\desktop\programacion\enigma\enigma\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<ctype.h>
 	<stdbool.h>
+	<windows.h>
+	<dos.h>
+	<dir.h>
 
