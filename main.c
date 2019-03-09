@@ -23,7 +23,9 @@ int main(){
     int length, ascii;
     printf("Ingrese Palabra: ");
     gets(text);
-    //print("%Ingrese config ")
+    printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
+    printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
+    printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
     toUpperCase(text);
     length = strlen(text);
     ascii = toascii(text);
@@ -31,11 +33,11 @@ int main(){
     fflush(stdin);
     //spaceToX(text);
     hr();
-    printf("CONFIG: %d,%d,%d\n\n", 1,21,14);
+    printf("CONFIG: %d,%d,%d\n\n", a,b,c);
     //grouping(text, length);
     hr();
-    getAsciiNum(text,length, 1,21,14);
-    loop(1,21,14,length);
+    getAsciiNum(text,length, a,b,c);
+    loop(a,b,c,length);
     return 0;
 }
 void hr(){
@@ -52,6 +54,18 @@ getAsciiNum(char text[SIZE], int length, int a, int b, int c){
     int i, num, j=1, sum, rest, c2, w1;
 
     for(i = 0; i < length; i++){
+        if(c > 26){
+            b++;
+            c = 1;
+        }
+        if(b > 26){
+            b = 1;
+            a++;
+        }
+        if(a > 26){
+            a = 1;
+            c = 1;
+        }
         printf("%d", i);
         SetColor(3);
         //w1 = c + text[i] - 1;
@@ -80,6 +94,7 @@ getAsciiNum(char text[SIZE], int length, int a, int b, int c){
         printf("RT1 IN ASCII: %d\nRT1 ASCII LETTER: %c\n\n", rt1[sum], rt1[sum]);
         newstr[i] = rt1[sum];
         sum = 0;
+        c++;
     }
     hr();
     grouping(newstr, length);
