@@ -149,35 +149,38 @@ toUpperCase(char text[SIZE]){
     return text;
 }
 
-/*print(char text[SIZE], int length){
-    hr();
-    grouping(text, length);
-    printf("CODEX: %s", text);
-    hr();
-}*/
 // TODO: establecer config.
 
 int loop(int a, int b, int c, int length, char text[SIZE]){
-    /* I */ char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
-    /* II */ char rt2[] = "DXJTPVRGFZAWBISOLUYQCEHKNM";
-    /* III */ char rt3[] = "NYPEUBSAMHXCLWFQVZIGJOKTRD";
+    char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
+    char rt2[] = "DXJTPVRGFZAWBISOLUYQCEHKNM";
+    char rt3[] = "NYPEUBSAMHXCLWFQVZIGJOKTRD";
     char abc[SIZE] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char newstr[SIZE];
-    int i = c, j = b, k = a, x = 0, num, sum, abcn, i2;
+    int i = c, j = b, k = a, i2,j2, k2;
+    int x = 0, num, sum, abcn, z, y;
     while(x < length){
         num = text[x] - 64;
         sum = i - 1 + num;
-        SetColor(14);printf("SUM: %d\n", sum);
+
+        SetColor(14);
+        printf("SUM: %d\n", sum);
+
         if(sum > 26){
             sum = sum - 26;
             printf("SUM > 26\nREST = %d\n", sum);
         }
+
         printf("RT1 IN ASCII: %d\nRT1 ASCII LETTER: %c\n", rt1[sum-1], rt1[sum-1]);
         SetColor(15);
-        printf("TEXT[%d]: %c\n", x, text[x]);
+
         for(i2=0;i2<26;i2++){
-            if(abc[i2]== rt1[sum-1]){abcn = abc[i2] - 64;}
+            if(abc[i2]== rt1[sum-1]){
+                abcn = abc[i2] - 64;
+            }
         }
+
+        //SPACE TO X
         if(text[x] == 32){
             text[x] = 88;
             printf("%c\n\n",text[x]);
@@ -186,21 +189,48 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
             hr();
             continue;
         }
+
+        //CREATE NEW STRING WITH CODIFIED MESSAGE
         newstr[x] = rt1[sum-1];
+
         sum = 0;
-        SetColor(2);printf("RT1: %c\n", rt1[i-1]);printf("RT2: %c\n", rt2[j-1]);printf("RT3: %c\n", rt3[k-1]);SetColor(4);
-        printf("RT1:%d\nRT2:%d\nRT3:%d\n", i,j,k);SetColor(15);
-        printf("\n%d - %c\n", abcn, abcn + 64);
-        printf("WORD: %c\n", text[x]);printf("NUM - WORD: %d\n", num);
+        SetColor(2);
+        printf("RT1: %c\n", rt1[i-1]);
+        printf("RT2: %c\n", rt2[j-1]);
+        printf("RT3: %c\n", rt3[k-1]);
+
+        SetColor(4);
+        printf("RT1:%d\nRT2:%d\nRT3:%d\n", i,j,k);
+
+        SetColor(15);
+        printf("RT1-ABC: %d - %c\n", abcn, abcn + 64);
+        printf("WORD: %c\n", text[x]);
+        printf("NUM - WORD: %d\n", num);
+
+        z = abcn + j;
+        z -= i;
+        if(z > 26){
+            z -= 26;
+        }
+        SetColor(2);
+        printf("RT2-VERDE: %d - %c", z, rt2[z-1]);
+        //abcn = rt2[z-1] + 64;
+        for(j2 = 0; j2 < 26; j2++){
+            if(abc[j2] == rt2[z-1]){
+                abcn = abc[j2] - 64;
+            }
+        }
+        SetColor(11);
+        printf("\nRT2-ABC:%d - %c\n", abcn, abcn + 64);
         SetColor(3);
         printf("CODEX: %c\n", newstr[x]);
         printf("\nI: %d\nX: %d", i,x);
         hr();
-        SetColor(15);
 
+        SetColor(15);
         if(i > 25){
             j++;
-            i=1;
+            i=0;
         }
         if(j > 26){
             k++;
@@ -212,10 +242,9 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
         }
         i++;
         x++;
-
     }
     hr();
-    printf("FINAL OUTPUT: ");
+    printf("FINAL OUTPUT: \n");
     grouping(newstr, length);
     //printf("\nCODEX: %s", newstr);
     hr();
