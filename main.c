@@ -162,6 +162,7 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
     int x = 0, num, sum, abcn, z, y, f;
     while(x < length){
         num = text[x] - 64;
+        printf("LETRA: %c\n", text[x]);
 
         // RT1
         printf("NUM: %d\n", num);
@@ -182,7 +183,7 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
         if(abcn > 26){
             abcn -= 26;
         } else {
-            if(abcn < 0){
+            if(abcn < 1){
                 abcn += 26;
             }
         }
@@ -191,7 +192,7 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
         //SEGUNDA PARTE:
         abcn = rt2[abcn-1] - 64;
         abcn = abcn + k - j;
-        if(abcn < 0){
+        if(abcn < 1){
             abcn += 26;
         } else {
             if(abcn > 26){
