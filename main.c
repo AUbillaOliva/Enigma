@@ -15,94 +15,30 @@ void toUpperCase(char text[SIZE]);
 void spaceToX(char text[SIZE]);
 void grouping(char text[SIZE], int length);
 void getAsciiNum(char text[SIZE], int length, int a, int b, int c);
-void print(char text[SIZE], int length);
 void hr();
 int main(){
-    int a=1,b=21,c=19;
+    int a,b,c;
     char text[SIZE], newc[SIZE];
     int length, ascii;
     printf("Ingrese Palabra: ");
     gets(text);
     system("cls");
-    //printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
-    //printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
-    //printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
+    printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
+    printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
+    printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
     toUpperCase(text);
     length = strlen(text);
-    //ascii = toascii(text);
     printf("%s, String length: %d\n\n",text, length);
     fflush(stdin);
-    //spaceToX(text);
     hr();
     printf("CONFIG: %d,%d,%d\n", a,b,c);
-    //grouping(text, length);
     hr();
-    //getAsciiNum(text,length, a,b,c);
     loop(a,b,c,length,text);
     return main();
 }
 void hr(){
     printf("\n----------------------------\n");
 }
-
-/*getAsciiNum(char text[SIZE], int length, int a, int b, int c){
-    char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
-    char rt2[] = "DXJTPVRGFZAWBISOLUYQCEHKNM";
-    char rt3[] = "NYPEUBSAMHXCLWFQVZIGJOKTRD";
-    char abc[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    char newstr[SIZE];
-    int i, num, j=1, sum, rest, c2, w1;
-
-    for(i = 0; i < length; i++){
-        if(c > 26){
-            b++;
-            c = 1;
-        }
-        if(b > 26){
-            b = 1;
-            a++;
-        }
-        if(a > 26){
-            a = 1;
-            c = 1;
-        }
-        printf("%d\n", i);
-        SetColor(3);
-        //w1 = c + text[i] - 1;
-        //printf("WIRE 1: %d\n", w1);
-        SetColor(15);
-        if(text[i] == 32){
-            text[i] = 88;
-            printf("%c\n\n",text[i]);
-            newstr[i] = text[i];
-            i++;
-        }
-        num = text[i] - 64;
-        SetColor(10);
-        printf("TEXT: %c\nTEXT NUM: %d\n", text[i], text[i]);
-        SetColor(15);
-        sum = c-2+num;
-        SetColor(14);
-        printf("SUM: %d\n", sum);
-        if(sum > 26){
-            sum = sum - 26;
-            printf("SUM > 26\nREST = %d\n", sum );
-        }
-        SetColor(12);
-        printf("NUM: %d\n", num);
-        SetColor(15);
-        printf("RT1 IN ASCII: %d\nRT1 ASCII LETTER: %c\n\n", rt1[sum], rt1[sum]);
-        newstr[i] = rt1[sum];
-        sum = 0;
-        c++;
-    }
-    hr();
-    grouping(newstr, length);
-    //printf("\nCODEX: %s", newstr);
-    hr();
-}*/
-
 void SetColor(int ForgC){
     WORD wColor;
     HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -149,8 +85,6 @@ toUpperCase(char text[SIZE]){
     }
     return text;
 }
-
-// TODO: establecer config.
 
 int loop(int a, int b, int c, int length, char text[SIZE]){
     char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
@@ -259,11 +193,10 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
     hr();
     printf("FINAL OUTPUT: \n");
     grouping(newstr, length);
-    //printf("\nCODEX: %s", newstr);
     hr();
 }
 
-/*
+/* COLOR TABLE:
 Name         | Value
              |
 Black        |   0
@@ -282,12 +215,4 @@ Light Red    |   12
 Light Magenta|   13
 Yellow       |   14
 White        |   15
-*/
-
-/*
- 3 * 2 * 1 = 6
- 26 * 26 * 26 = 17.576
- 6 * 17.576 = 105.456
- ' ' = X
-
 */
