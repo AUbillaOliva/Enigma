@@ -18,14 +18,15 @@ void getAsciiNum(char text[SIZE], int length, int a, int b, int c);
 void print(char text[SIZE], int length);
 void hr();
 int main(){
-    int a,b,c;
+    int a=1,b=21,c=19;
     char text[SIZE], newc[SIZE];
     int length, ascii;
     printf("Ingrese Palabra: ");
     gets(text);
-    printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
-    printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
-    printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
+    system("cls");
+    //printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
+    //printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
+    //printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
     toUpperCase(text);
     length = strlen(text);
     //ascii = toascii(text);
@@ -38,7 +39,7 @@ int main(){
     hr();
     //getAsciiNum(text,length, a,b,c);
     loop(a,b,c,length,text);
-    return 0;
+    return main();
 }
 void hr(){
     printf("\n----------------------------\n");
@@ -158,27 +159,58 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
     char abc[SIZE] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char newstr[SIZE];
     int i = c, j = b, k = a, i2,j2, k2;
-    int x = 0, num, sum, abcn, z, y;
+    int x = 0, num, sum, abcn, z, y, f;
     while(x < length){
         num = text[x] - 64;
-        sum = i - 1 + num;
 
-        SetColor(14);
-        printf("SUM: %d\n", sum);
-
-        if(sum > 26){
-            sum = sum - 26;
-            printf("SUM > 26\nREST = %d\n", sum);
+        // RT1
+        printf("NUM: %d\n", num);
+        abcn = num + i - 1;
+        if(abcn > 26){
+            abcn -= 26;
         }
+        SetColor(14);
+        printf("RT1: %c\nRT1 NUM: %d\n", rt1[abcn - 1], rt1[abcn-1] -64);
 
-        printf("RT1 IN ASCII: %d\nRT1 ASCII LETTER: %c\n", rt1[sum-1], rt1[sum-1]);
-        SetColor(15);
-
-        for(i2=0;i2<26;i2++){
-            if(abc[i2]== rt1[sum-1]){
-                abcn = abc[i2] - 64;
+        // RT2
+        for(i2 = 0; i2 < 26; i2++){
+            if(abc[i2] == rt1[abcn - 1]){
+                num = abc[i2] - 64;
             }
         }
+        abcn = num + j - i;
+        if(abcn > 26){
+            abcn -= 26;
+        } else {
+            if(abcn < 0){
+                abcn += 26;
+            }
+        }
+        SetColor(4);
+        printf("RT2: %c\nRT2 NUM: %d\n", rt2[abcn - 1], rt2[abcn - 1] - 64);
+        //SEGUNDA PARTE:
+        abcn = rt2[abcn-1] - 64;
+        abcn = abcn + k - j;
+        if(abcn < 0){
+            abcn += 26;
+        } else {
+            if(abcn > 26){
+                abcn -= 26;
+            }
+        }
+        SetColor(11);
+        printf("RT3: %c\nRT3 NUM: %d\n",rt3[abcn-1], rt3[abcn-1]-64);
+        SetColor(15);
+        f = rt3[abcn - 1] - 64;
+        f -= k;
+        if(f<0){
+            f += 26;
+        } else {
+            if(f>26){
+                f -= 26;
+            }
+        }
+        printf("FINAL: %c\n",abc[f]);
 
         //SPACE TO X
         if(text[x] == 32){
@@ -191,9 +223,8 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
         }
 
         //CREATE NEW STRING WITH CODIFIED MESSAGE
-        newstr[x] = rt1[sum-1];
+        newstr[x] = abc[f];
 
-        sum = 0;
         SetColor(2);
         printf("RT1: %c\n", rt1[i-1]);
         printf("RT2: %c\n", rt2[j-1]);
@@ -201,27 +232,6 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
 
         SetColor(4);
         printf("RT1:%d\nRT2:%d\nRT3:%d\n", i,j,k);
-
-        SetColor(15);
-        printf("RT1-ABC: %d - %c\n", abcn, abcn + 64);
-        printf("WORD: %c\n", text[x]);
-        printf("NUM - WORD: %d\n", num);
-
-        z = abcn + j;
-        z -= i;
-        if(z > 26){
-            z -= 26;
-        }
-        SetColor(2);
-        printf("RT2-VERDE: %d - %c", z, rt2[z-1]);
-        //abcn = rt2[z-1] + 64;
-        for(j2 = 0; j2 < 26; j2++){
-            if(abc[j2] == rt2[z-1]){
-                abcn = abc[j2] - 64;
-            }
-        }
-        SetColor(11);
-        printf("\nRT2-ABC:%d - %c\n", abcn, abcn + 64);
         SetColor(3);
         printf("CODEX: %c\n", newstr[x]);
         printf("\nI: %d\nX: %d", i,x);
@@ -240,6 +250,8 @@ int loop(int a, int b, int c, int length, char text[SIZE]){
             i=0;
             k=1;
         }
+        abcn = 0;
+        sum = 0;
         i++;
         x++;
     }
