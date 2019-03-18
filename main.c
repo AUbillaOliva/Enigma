@@ -19,6 +19,7 @@ void SetColor(int ForgC);
 void encript(int a, int b, int c, int length, char text[SIZE]);
 void decrypt(int a, int b, int c, int length, char text[SIZE]);
 void hr();
+void saveText(char text[SIZE], char encripted[SIZE]);
 int main(){
     int a,b,c;
     char text[SIZE];
@@ -117,14 +118,37 @@ toUpperCase(char text[SIZE]){
     return text;
 }
 
+saveText(char text[SIZE], char encripted[SIZE]){
+    char name[SIZE];
+    char * new_str;
+    FILE * fPointer;
+    fflush(stdin);
+    printf("Ingrese un nombre al texto: ");gets(name);
+    fflush(stdin);
+    if((new_str = malloc(strlen(name)+strlen(".txt")+1)) != NULL){
+        new_str[0] = '\0';
+        strcat(new_str, name);
+        strcat(new_str, ".txt");
+    } else {
+        fprintf(fPointer, "malloc failed!\n");
+    }
+    fPointer = fopen(new_str, "w");
+    fprintf(fPointer, text);
+    fprintf(fPointer, encripted);
+    fclose(fPointer);
+}
+
 encript(int a, int b, int c, int length, char text[SIZE]){
     char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
     char rt2[] = "DXJTPVRGFZAWBISOLUYQCEHKNM";
     char rt3[] = "NYPEUBSAMHXCLWFQVZIGJOKTRD";
     char abc[SIZE] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char newstr[SIZE];
+    char origin[SIZE];
+    strcpy(origin, text);
+    printf("%s", origin);
     int i = c, j = b, k = a, i2;
-    int x = 0, num, abcn, f;
+    int x = 0, num, abcn, f, op;
     while(x < length){
         num = text[x] - 64;
         printf("LETRA: %c\n", text[x]);
@@ -217,9 +241,30 @@ encript(int a, int b, int c, int length, char text[SIZE]){
         x++;
     }
     hr();
+    printf("Original Text: \n%s\n\n", origin);
     printf("FINAL OUTPUT: \n");
     grouping(newstr, length);
+    char * new_str ;
+    if((new_str = malloc(strlen(origin)+strlen("\n")+1)) != NULL){
+        new_str[0] = '\0';   // ensures the memory is an empty string
+        strcat(new_str,origin);
+        strcat(new_str,"\n");
+    }
     hr();
+    printf("Desea guardar el texto?\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
+    while(op < 1 || op > 2){
+        system("cls");
+        printf("Por favor ingrese una opcion valida\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
+    }
+    switch(op){
+        case 1:
+            system("cls");
+            saveText(new_str, newstr);
+            break;
+        case 2:
+            printf("No Guardar");
+            return 0;
+    }
 }
 decrypt(int a, int b, int c, int length, char text[SIZE]){
     char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
