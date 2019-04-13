@@ -6,20 +6,19 @@
 #include <windows.h>
 #include <dos.h>
 #include <dir.h>
-typedef bool;
 #define true 1
 #define false 0
 #define SIZE 1000
 
 void toUpperCase(char text[SIZE]);
 void spaceToX(char text[SIZE]);
-const char * grouping(char text[SIZE], int length);
+void grouping(char text[SIZE], int length, char original[SIZE]);
 void getAsciiNum(char text[SIZE], int length, int a, int b, int c);
 void SetColor(int ForgC);
 void encript(int a, int b, int c, int length, char text[SIZE]);
 void decrypt(int a, int b, int c, int length, char text[SIZE]);
 void hr();
-void saveText(char text[SIZE], char encripted[SIZE]);
+void saveText(char text[SIZE], char encripted[SIZE], char original[SIZE]);
 void appendString(char * str1, char * str2);
 int main(){
     int a,b,c;
@@ -88,10 +87,9 @@ SetColor(int ForgC){
     }
     return;
 }
-const char * grouping(char text[SIZE], int length){
-    char * space = 32;
+grouping(char text[SIZE], int length, char original[SIZE]){
     char new_str[SIZE];
-    int j=0,c=0, a=0;
+    int j=0,c=0, a=0, op;
     for(int i = 0; i < length; i++){
         new_str[c] = text[a];
         if((i+1) % 5 == 0){
@@ -101,18 +99,32 @@ const char * grouping(char text[SIZE], int length){
             a--;
             if(j % 4 == 0){
                 new_str[c] = 10;
-                c++;
+                a--;
             }
         }
-        printf("C: %d - %c | I: %d - %c\n", c,new_str[c],a, text[a]);
+        //printf("C: %d - %c | I: %d - %c\n", c,new_str[c],a, text[a]);
         a++;
         c++;
     }
     hr();
     printf("%s", new_str);
     hr();
-    return new_str;
+    printf("Desea guardar el texto?\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
+    while(op < 1 || op > 2){
+        system("cls");
+        printf("Por favor ingrese una opcion valida\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
+    }
+    switch(op){
+        case 1:
+            system("cls");
+            saveText(text, new_str, original);
+            break;
+        case 2:
+            printf("No Guardar");
+            return 0;
+    }
 }
+/*
 appendString(char * str1, char * str2){
     char new_str;
     while(1){
@@ -133,6 +145,7 @@ appendString(char * str1, char * str2){
     }
     return;
 }
+*/
 spaceToX(char text[SIZE]){
     for(int i = 0;i <= strlen(text); i++){
         if(text[i] == 32){
@@ -146,9 +159,8 @@ toUpperCase(char text[SIZE]){
             text[i]=text[i]-32;
 	    }
     }
-    return text;
 }
-saveText(char text[SIZE], char encripted[SIZE]){
+saveText(char text[SIZE], char encripted[SIZE], char original[SIZE]){
     char name[SIZE];
     char * new_str;
     int check;
@@ -185,7 +197,8 @@ saveText(char text[SIZE], char encripted[SIZE]){
     }
 
     fPointer = fopen(uri, "w");
-    fprintf(fPointer, text);
+    fprintf(fPointer, original);
+    fprintf(fPointer, "\n");
     fprintf(fPointer, encripted);
     fclose(fPointer);
 }
@@ -296,7 +309,7 @@ encript(int a, int b, int c, int length, char text[SIZE]){
     hr();
     printf("Original Text: \n%s\n\n", origin);
     printf("FINAL OUTPUT: \n");
-    encripted = grouping(newstr, length);
+    grouping(newstr, length, origin);
     printf("FINAL STRING: %s", encripted);
     if((new_str = malloc(strlen(origin)+strlen("\n")+1)) != NULL){
         new_str[0] = '\0';   // ensures the memory is an empty string
@@ -305,21 +318,8 @@ encript(int a, int b, int c, int length, char text[SIZE]){
     }
     printf("new_str: %s\nnewstr: %s\n", new_str, newstr);
     hr();
-    printf("Desea guardar el texto?\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
-    while(op < 1 || op > 2){
-        system("cls");
-        printf("Por favor ingrese una opcion valida\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
-    }
-    switch(op){
-        case 1:
-            system("cls");
-            saveText(new_str, newstr);
-            break;
-        case 2:
-            printf("No Guardar");
-            return 0;
-    }
 }
+/*
 decrypt(int a, int b, int c, int length, char text[SIZE]){
     char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
     char rt2[] = "DXJTPVRGFZAWBISOLUYQCEHKNM";
@@ -424,7 +424,7 @@ decrypt(int a, int b, int c, int length, char text[SIZE]){
     grouping(newstr, length);
     hr();
 }
-
+*/
 /* COLOR TABLE:
 Name         | Value
              |
