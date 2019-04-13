@@ -13,13 +13,14 @@ typedef bool;
 
 void toUpperCase(char text[SIZE]);
 void spaceToX(char text[SIZE]);
-void grouping(char text[SIZE], int length);
+const char * grouping(char text[SIZE], int length);
 void getAsciiNum(char text[SIZE], int length, int a, int b, int c);
 void SetColor(int ForgC);
 void encript(int a, int b, int c, int length, char text[SIZE]);
 void decrypt(int a, int b, int c, int length, char text[SIZE]);
 void hr();
 void saveText(char text[SIZE], char encripted[SIZE]);
+void appendString(char * str1, char * str2);
 int main(){
     int a,b,c;
     char text[SIZE];
@@ -59,7 +60,7 @@ int main(){
             printf("Desenctiptrar");
         }
     }
-    printf("Desea volver a usar el programa?\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
+    printf("\nDesea volver a usar el programa?\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
     while(op < 1 || op > 2){
         system("cls");
         printf("Por favor ingrese una opcion valida\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
@@ -87,19 +88,50 @@ SetColor(int ForgC){
     }
     return;
 }
-grouping(char text[SIZE], int length){
+const char * grouping(char text[SIZE], int length){
     char * space = 32;
-    int j=0;
+    char new_str[SIZE];
+    int j=0,c=0, a=0;
     for(int i = 0; i < length; i++){
-        printf("%c", text[i]);
-        if((i+1) % 4 == 0){
-            printf(" ");
+        new_str[c] = text[a];
+        if((i+1) % 5 == 0){
+            new_str[c] = 32;
+            length++;
             j++;
+            a--;
             if(j % 4 == 0){
-                printf("\n");
+                new_str[c] = 10;
+                c++;
             }
         }
+        printf("C: %d - %c | I: %d - %c\n", c,new_str[c],a, text[a]);
+        a++;
+        c++;
     }
+    hr();
+    printf("%s", new_str);
+    hr();
+    return new_str;
+}
+appendString(char * str1, char * str2){
+    char new_str;
+    while(1){
+        new_str = *str1;
+        if(new_str==0){
+            break;
+        }
+        str1 += 1;
+    }
+    while(1){
+        *str1=*str2;
+
+        if((*str1) == 0){
+            break;
+        }
+        str1 += 1;
+        str2 += 1;
+    }
+    return;
 }
 spaceToX(char text[SIZE]){
     for(int i = 0;i <= strlen(text); i++){
@@ -108,7 +140,6 @@ spaceToX(char text[SIZE]){
         }
     }
 }
-
 toUpperCase(char text[SIZE]){
     for(int i=0;i<=strlen(text);i++){
 	    if(text[i]>=97 && text[i]<=122){
@@ -117,27 +148,47 @@ toUpperCase(char text[SIZE]){
     }
     return text;
 }
-
 saveText(char text[SIZE], char encripted[SIZE]){
     char name[SIZE];
     char * new_str;
+    int check;
+    char* dirName = "files";
+    char * uri = "files\\";
     FILE * fPointer;
     fflush(stdin);
+    check = mkdir(dirName);
+
+    if (!check){
+        printf("Directorio creado\n");
+    } else {
+        if(check){
+            printf("Directorio ya creado!\n");
+        } else {
+            printf("No se pudo crear el directorio.\n");
+        }
+    }
+
     printf("Ingrese un nombre al texto: ");gets(name);
     fflush(stdin);
+
     if((new_str = malloc(strlen(name)+strlen(".txt")+1)) != NULL){
         new_str[0] = '\0';
         strcat(new_str, name);
         strcat(new_str, ".txt");
-    } else {
-        fprintf(fPointer, "malloc failed!\n");
+        printf("%s", new_str);
     }
-    fPointer = fopen(new_str, "w");
+    if((uri = malloc(strlen("files\\")+strlen(new_str) + 1)) != NULL){
+        uri[0] = '\0';
+        strcat(uri, "files\\");
+        strcat(uri, new_str);
+        printf("%s", uri);
+    }
+
+    fPointer = fopen(uri, "w");
     fprintf(fPointer, text);
     fprintf(fPointer, encripted);
     fclose(fPointer);
 }
-
 encript(int a, int b, int c, int length, char text[SIZE]){
     char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
     char rt2[] = "DXJTPVRGFZAWBISOLUYQCEHKNM";
@@ -145,6 +196,8 @@ encript(int a, int b, int c, int length, char text[SIZE]){
     char abc[SIZE] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char newstr[SIZE];
     char origin[SIZE];
+    char * new_str;
+    static char * encripted;
     strcpy(origin, text);
     printf("%s", origin);
     int i = c, j = b, k = a, i2;
@@ -243,13 +296,14 @@ encript(int a, int b, int c, int length, char text[SIZE]){
     hr();
     printf("Original Text: \n%s\n\n", origin);
     printf("FINAL OUTPUT: \n");
-    grouping(newstr, length);
-    char * new_str ;
+    encripted = grouping(newstr, length);
+    printf("FINAL STRING: %s", encripted);
     if((new_str = malloc(strlen(origin)+strlen("\n")+1)) != NULL){
         new_str[0] = '\0';   // ensures the memory is an empty string
         strcat(new_str,origin);
         strcat(new_str,"\n");
     }
+    printf("new_str: %s\nnewstr: %s\n", new_str, newstr);
     hr();
     printf("Desea guardar el texto?\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
     while(op < 1 || op > 2){
