@@ -29,3 +29,13 @@
 	<dos.h>
 	<dir.h>
 
+1555546912 source:d:\users\terminus\desktop\programacion\c\enigma\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<stdbool.h>
+	<windows.h>
+	<dos.h>
+	<dir.h>
+
