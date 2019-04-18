@@ -4,8 +4,9 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <windows.h>
-#include <dos.h>
-#include <dir.h>
+//#include <dos.h>
+//#include <dir.h>
+#include <unistd.h>
 #define true 1
 #define false 0
 #define SIZE 1000
@@ -13,13 +14,12 @@
 void toUpperCase(char text[SIZE]);
 void spaceToX(char text[SIZE]);
 void grouping(char text[SIZE], int length, char original[SIZE]);
-void getAsciiNum(char text[SIZE], int length, int a, int b, int c);
 void SetColor(int ForgC);
 void encript(int a, int b, int c, int length, char text[SIZE]);
-void decrypt(int a, int b, int c, int length, char text[SIZE]);
+void decrypt(int a, int b, int c);
 void hr();
 void saveText(char text[SIZE], char encripted[SIZE], char original[SIZE]);
-void appendString(char * str1, char * str2);
+void searchFile(char file[SIZE]);
 int main(){
     int a,b,c;
     char text[SIZE];
@@ -29,36 +29,52 @@ int main(){
         system("cls");
         printf("Por favor ingrese una opcion valida!\n1) Encriptar\n2) Desencriptar\nOpcion: ");scanf("%d", &op);
     }
-    fflush(stdin);
-    printf("Ingrese Palabra: ");
-    gets(text);
-    printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
-    while(c > 26 || c < 1){
-        printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
-    }
-    printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
-    while(b > 26 || b < 1){
-        printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
-    }
-    printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
-    while(a > 26 || a < 1){
-        printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
-    }
-    toUpperCase(text);
-    length = strlen(text);
     system("cls");
-    printf("%s, String length: %d",text, length);
-    fflush(stdin);
-    hr();
-    printf("CONFIG: %d,%d,%d", a,b,c);
-    hr();
-    if(op == 1){
-        encript(a,b,c,length,text);
-    } else {
-        if(op == 2){
-            printf("Desenctiptrar");
-        }
+    switch(op){
+        case 1:
+            fflush(stdin);
+            printf("Ingrese Palabra: ");
+            gets(text);
+            printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
+            while(c > 26 || c < 1){
+                printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
+            }
+            printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
+            while(b > 26 || b < 1){
+                printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
+            }
+            printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
+            while(a > 26 || a < 1){
+                printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
+            }
+            toUpperCase(text);
+            length = strlen(text);
+            system("cls");
+            printf("%s, String length: %d",text, length);
+            fflush(stdin);
+            hr();
+            printf("CONFIG: %d,%d,%d", a,b,c);
+            hr();
+            encript(a,b,c,length,text);
+            break;
+        case 2:
+            /*printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
+            while(c > 26 || c < 1){
+                printf("Ingrese configuracion RT1 (C): ");scanf("%d", &c);
+            }
+            printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
+            while(b > 26 || b < 1){
+                printf("Ingrese configuracion RT2 (B): ");scanf("%d", &b);
+            }
+            printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
+            while(a > 26 || a < 1){
+                printf("Ingrese configuracion RT3 (A): ");scanf("%d", &a);
+            }*/
+            fflush(stdin);
+            decrypt(1,21,19);
+            break;
     }
+    fflush(stdin);
     printf("\nDesea volver a usar el programa?\n1) Si\n2) No\nOpcion: ");scanf("%d", &op);
     while(op < 1 || op > 2){
         system("cls");
@@ -102,7 +118,6 @@ grouping(char text[SIZE], int length, char original[SIZE]){
                 a--;
             }
         }
-        //printf("C: %d - %c | I: %d - %c\n", c,new_str[c],a, text[a]);
         a++;
         c++;
     }
@@ -121,31 +136,8 @@ grouping(char text[SIZE], int length, char original[SIZE]){
             break;
         case 2:
             printf("No Guardar");
-            return 0;
     }
 }
-/*
-appendString(char * str1, char * str2){
-    char new_str;
-    while(1){
-        new_str = *str1;
-        if(new_str==0){
-            break;
-        }
-        str1 += 1;
-    }
-    while(1){
-        *str1=*str2;
-
-        if((*str1) == 0){
-            break;
-        }
-        str1 += 1;
-        str2 += 1;
-    }
-    return;
-}
-*/
 spaceToX(char text[SIZE]){
     for(int i = 0;i <= strlen(text); i++){
         if(text[i] == 32){
@@ -210,24 +202,17 @@ encript(int a, int b, int c, int length, char text[SIZE]){
     char newstr[SIZE];
     char origin[SIZE];
     char * new_str;
-    static char * encripted;
+    //static char * encripted;
     strcpy(origin, text);
-    printf("%s", origin);
     int i = c, j = b, k = a, i2;
-    int x = 0, num, abcn, f, op;
+    int x = 0, num, abcn, f;
     while(x < length){
         num = text[x] - 64;
-        printf("LETRA: %c\n", text[x]);
-
         // RT1
-        printf("NUM: %d\n", num);
         abcn = num + i - 1;
         if(abcn > 26){
             abcn -= 26;
         }
-        SetColor(14);
-        printf("RT1: %c\nRT1 NUM: %d\n", rt1[abcn - 1], rt1[abcn-1] -64);
-
         // RT2
         for(i2 = 0; i2 < 26; i2++){
             if(abc[i2] == rt1[abcn - 1]){
@@ -242,26 +227,21 @@ encript(int a, int b, int c, int length, char text[SIZE]){
                 abcn += 26;
             }
         }
-        SetColor(4);
-        printf("RT2: %c\nRT2 NUM: %d\n", rt2[abcn - 1], rt2[abcn - 1] - 64);
         //SEGUNDA PARTE:
         abcn = rt2[abcn-1] - 64;
         abcn = abcn + k - j;
         if(abcn < 1){
             abcn += 26;
-        } else {
+        }else{
             if(abcn > 26){
                 abcn -= 26;
             }
         }
-        SetColor(11);
-        printf("RT3: %c\nRT3 NUM: %d\n",rt3[abcn-1], rt3[abcn-1]-64);
-        SetColor(15);
         f = rt3[abcn - 1] - 64;
         f -= k;
         if(f<0){
             f += 26;
-        } else {
+        }else{
             if(f>26){
                 f -= 26;
             }
@@ -269,162 +249,81 @@ encript(int a, int b, int c, int length, char text[SIZE]){
         //SPACE TO X
         if(text[x] == 32){
             text[x] = 88;
-            printf("%c\n\n",text[x]);
             newstr[x] = text[x];
             x++;
-            hr();
             continue;
         }
 
         //CREATE NEW STRING WITH CODIFIED MESSAGE
         newstr[x] = abc[f];
-
-        SetColor(2);
-        printf("RT1: %c\n", rt1[i-1]);
-        printf("RT2: %c\n", rt2[j-1]);
-        printf("RT3: %c\n", rt3[k-1]);
-
-        SetColor(4);
-        printf("RT1:%d\nRT2:%d\nRT3:%d\n", i,j,k);
-        SetColor(3);
-        printf("CODEX: %c\n", newstr[x]);
-        printf("\nI: %d\nX: %d", i,x);
-        SetColor(15);
-        if(i > 25){
-            j++;
-            i=0;
-        }
-        if(j > 26){
-            k++;
-            j=1;
-        }
-        if(k > 26){
-            i=0;
-            k=1;
-        }
-        abcn = 0;
-        i++;
-        x++;
+        if(i > 25){j++;i=0;}
+        if(j > 26){k++;j=1;}
+        if(k > 26){i=0;k=1;}
+        abcn=0;i++;x++;
     }
-    hr();
     printf("Original Text: \n%s\n\n", origin);
-    printf("FINAL OUTPUT: \n");
+    printf("FINAL OUTPUT:");
     grouping(newstr, length, origin);
-    printf("FINAL STRING: %s", encripted);
     if((new_str = malloc(strlen(origin)+strlen("\n")+1)) != NULL){
         new_str[0] = '\0';   // ensures the memory is an empty string
         strcat(new_str,origin);
         strcat(new_str,"\n");
     }
-    printf("new_str: %s\nnewstr: %s\n", new_str, newstr);
     hr();
 }
-/*
-decrypt(int a, int b, int c, int length, char text[SIZE]){
-    char rt1[] = "KFZAMQWCXOESIBTHRJUVNLPGDY";
-    char rt2[] = "DXJTPVRGFZAWBISOLUYQCEHKNM";
-    char rt3[] = "NYPEUBSAMHXCLWFQVZIGJOKTRD";
-    char abc[SIZE] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    char newstr[SIZE];
-    int i = c, j = b, k = a, i2;
-    int x = 0, num, abcn, f;
-    while(x < length){
-        num = text[x] - 64;
-        printf("LETRA: %c\n", text[x]);
-
-        // RT1
-        printf("NUM: %d\n", num);
-        abcn = num + i - 1;
-        if(abcn > 26){
-            abcn -= 26;
+searchFile(char file[SIZE]){
+    char* dirName = "files";
+    int check = mkdir(dirName);
+    FILE * fPointer;
+    fflush(stdin);
+    char * uri = "files\\";
+    fPointer = fopen(uri, "r");
+    char text[SIZE];
+    int i = 0;
+    char ch;
+    if(check){
+        printf("Existe el directorio !\n");
+        if((uri = malloc(strlen("files\\")+strlen(file) + 1)) != NULL){
+            uri[0] = '\0';
+            strcat(uri, "files\\");
+            strcat(uri, file);
         }
-        SetColor(14);
-        printf("RT1: %c\nRT1 NUM: %d\n", rt1[abcn - 1], rt1[abcn-1] -64);
+        if(access(uri, F_OK) != 1){
+            printf("\nEl archivo a buscar si existe!\n");
+            fPointer = fopen(uri, "r");
+            fflush(stdin);
+            while(!feof(fPointer)){
+                ch = fgetc(fPointer);
+                text[i] = ch;
+                i++;
 
-        // RT2
-        for(i2 = 0; i2 < 26; i2++){
-            if(abc[i2] == rt1[abcn - 1]){
-                num = abc[i2] - 64;
             }
-        }
-        abcn = num + j - i;
-        if(abcn > 26){
-            abcn -= 26;
+            printf("%s", text);
+            fclose(fPointer);
         } else {
-            if(abcn < 1){
-                abcn += 26;
-            }
-        }
-        SetColor(4);
-        printf("RT2: %c\nRT2 NUM: %d\n", rt2[abcn - 1], rt2[abcn - 1] - 64);
-        //SEGUNDA PARTE:
-        abcn = rt2[abcn-1] - 64;
-        abcn = abcn + k - j;
-        if(abcn < 1){
-            abcn += 26;
-        } else {
-            if(abcn > 26){
-                abcn -= 26;
-            }
-        }
-        SetColor(11);
-        printf("RT3: %c\nRT3 NUM: %d\n",rt3[abcn-1], rt3[abcn-1]-64);
-        SetColor(15);
-        f = rt3[abcn - 1] - 64;
-        f -= k;
-        if(f<0){
-            f += 26;
-        } else {
-            if(f>26){
-                f -= 26;
-            }
-        }
-        //SPACE TO X
-        if(text[x] == 32){
-            text[x] = 88;
-            printf("%c\n\n",text[x]);
-            newstr[x] = text[x];
-            x++;
-            hr();
-            continue;
+            printf("\nNo Existe el Archivo a buscar!");
         }
 
-        //CREATE NEW STRING WITH CODIFIED MESSAGE
-        newstr[x] = abc[f];
-
-        SetColor(2);
-        printf("RT1: %c\n", rt1[i-1]);
-        printf("RT2: %c\n", rt2[j-1]);
-        printf("RT3: %c\n", rt3[k-1]);
-
-        SetColor(4);
-        printf("RT1:%d\nRT2:%d\nRT3:%d\n", i,j,k);
-        SetColor(3);
-        printf("CODEX: %c\n", newstr[x]);
-        printf("\nI: %d\nX: %d", i,x);
-        SetColor(15);
-        if(i > 25){
-            j++;
-            i=0;
-        }
-        if(j > 26){
-            k++;
-            j=1;
-        }
-        if(k > 26){
-            i=0;
-            k=1;
-        }
-        abcn = 0;
-        i++;
-        x++;
+    } else {
+        printf("No existe el directorio!");
     }
-    hr();
-    printf("FINAL OUTPUT: \n");
-    grouping(newstr, length);
-    hr();
+
 }
-*/
+decrypt(int a, int b, int c){
+    char file[SIZE];
+    char * new_str;
+    printf("Ingrese el nombre del archivo a desencriptar: ");gets(file);
+
+    if((new_str = malloc(strlen(file)+strlen(".txt")+1)) != NULL){
+        new_str[0] = '\0';
+        strcat(new_str, file);
+        strcat(new_str, ".txt");
+        printf("%s", new_str);
+    }
+
+    searchFile(new_str);
+}
+
 /* COLOR TABLE:
 Name         | Value
              |
